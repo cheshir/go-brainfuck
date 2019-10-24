@@ -6,6 +6,7 @@ import (
 	"flag"
 	"io/ioutil"
 	"log"
+	"unicode"
 )
 
 const heapSize = 4096
@@ -23,15 +24,13 @@ func init() {
 
 %union{}
 
-%token '>' '<' '+' '-' '.'
+%token '>' '<' '+' '-' '.' SPACE
 
 %%
 
-list	: optional_newline
-	| list expr optional_newline
+line	: space
+	| line expr space
 	;
-
-optional_newline: /* empty */ | optional_newline '\n' ;
 
 expr	:    '>'
 		{
@@ -62,6 +61,10 @@ expr	:    '>'
 			print(heap[cursor]);
 		}
 	;
+
+space	:    /* empty */
+	|    space SPACE
+	;
 %%
 
 func main() {
@@ -90,6 +93,10 @@ func (l *yyLex) Lex(lval *yySymType) int {
 
 	c := l.source[l.cursor]
 	l.cursor++
+
+	if unicode.IsSpace(rune(c)) {
+		return SPACE
+	}
 
 	return int(c)
 }

@@ -1,16 +1,16 @@
 
 state 0
-	$accept: .list $end 
-	optional_newline: .    (3)
+	$accept: .line $end 
+	space: .    (8)
 
-	.  reduce 3 (src line 34)
+	.  reduce 8 (src line 65)
 
-	list  goto 1
-	optional_newline  goto 2
+	line  goto 1
+	space  goto 2
 
 state 1
-	$accept:  list.$end 
-	list:  list.expr optional_newline 
+	$accept:  line.$end 
+	line:  line.expr space 
 
 	$end  accept
 	'>'  shift 4
@@ -23,63 +23,63 @@ state 1
 	expr  goto 3
 
 state 2
-	list:  optional_newline.    (1)
-	optional_newline:  optional_newline.'\n' 
+	line:  space.    (1)
+	space:  space.SPACE 
 
-	'\n'  shift 9
-	.  reduce 1 (src line 30)
+	SPACE  shift 9
+	.  reduce 1 (src line 31)
 
 
 state 3
-	list:  list expr.optional_newline 
-	optional_newline: .    (3)
+	line:  line expr.space 
+	space: .    (8)
 
-	.  reduce 3 (src line 34)
+	.  reduce 8 (src line 65)
 
-	optional_newline  goto 10
+	space  goto 10
 
 state 4
-	expr:  '>'.    (5)
+	expr:  '>'.    (3)
 
-	.  reduce 5 (src line 36)
+	.  reduce 3 (src line 35)
 
 
 state 5
-	expr:  '<'.    (6)
+	expr:  '<'.    (4)
 
-	.  reduce 6 (src line 42)
+	.  reduce 4 (src line 41)
 
 
 state 6
-	expr:  '+'.    (7)
+	expr:  '+'.    (5)
 
-	.  reduce 7 (src line 48)
+	.  reduce 5 (src line 47)
 
 
 state 7
-	expr:  '-'.    (8)
+	expr:  '-'.    (6)
 
-	.  reduce 8 (src line 54)
+	.  reduce 6 (src line 53)
 
 
 state 8
-	expr:  '.'.    (9)
+	expr:  '.'.    (7)
 
-	.  reduce 9 (src line 60)
+	.  reduce 7 (src line 59)
 
 
 state 9
-	optional_newline:  optional_newline '\n'.    (4)
+	space:  space SPACE.    (9)
 
-	.  reduce 4 (src line 34)
+	.  reduce 9 (src line 66)
 
 
 state 10
-	list:  list expr optional_newline.    (2)
-	optional_newline:  optional_newline.'\n' 
+	line:  line expr space.    (2)
+	space:  space.SPACE 
 
-	'\n'  shift 9
-	.  reduce 2 (src line 31)
+	SPACE  shift 9
+	.  reduce 2 (src line 32)
 
 
 9 terminals, 4 nonterminals

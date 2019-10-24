@@ -12,6 +12,7 @@ import (
 	"flag"
 	"io/ioutil"
 	"log"
+	"unicode"
 )
 
 const heapSize = 4096
@@ -25,10 +26,12 @@ func init() {
 	flag.Parse()
 }
 
-//line brainfuck.y:24
+//line brainfuck.y:25
 type yySymType struct {
 	yys int
 }
+
+const SPACE = 57346
 
 var yyToknames = [...]string{
 	"$end",
@@ -39,7 +42,7 @@ var yyToknames = [...]string{
 	"'+'",
 	"'-'",
 	"'.'",
-	"'\\n'",
+	"SPACE",
 }
 var yyStatenames = [...]string{}
 
@@ -47,7 +50,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line brainfuck.y:65
+//line brainfuck.y:68
 
 func main() {
 	if sourceFile == "" {
@@ -74,6 +77,10 @@ func (l *yyLex) Lex(lval *yySymType) int {
 
 	c := l.source[l.cursor]
 	l.cursor++
+
+	if unicode.IsSpace(rune(c)) {
+		return SPACE
+	}
 
 	return int(c)
 }
@@ -108,11 +115,11 @@ var yyPgo = [...]int{
 }
 var yyR1 = [...]int{
 
-	0, 1, 1, 2, 2, 3, 3, 3, 3, 3,
+	0, 1, 1, 3, 3, 3, 3, 3, 2, 2,
 }
 var yyR2 = [...]int{
 
-	0, 1, 3, 0, 2, 1, 1, 1, 1, 1,
+	0, 1, 3, 1, 1, 1, 1, 1, 0, 2,
 }
 var yyChk = [...]int{
 
@@ -121,13 +128,13 @@ var yyChk = [...]int{
 }
 var yyDef = [...]int{
 
-	3, -2, 1, 3, 5, 6, 7, 8, 9, 4,
+	8, -2, 1, 8, 3, 4, 5, 6, 7, 9,
 	2,
 }
 var yyTok1 = [...]int{
 
 	1, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	9, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 6, 3, 7, 8, 3, 3, 3,
@@ -136,7 +143,7 @@ var yyTok1 = [...]int{
 }
 var yyTok2 = [...]int{
 
-	2, 3,
+	2, 3, 9,
 }
 var yyTok3 = [...]int{
 	0,
@@ -479,41 +486,41 @@ yydefault:
 	// dummy call; replaced with literal code
 	switch yynt {
 
-	case 5:
+	case 3:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line brainfuck.y:37
+//line brainfuck.y:36
 		{
 			if cursor < heapSize-1 {
 				cursor++
 			}
 		}
-	case 6:
+	case 4:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line brainfuck.y:43
+//line brainfuck.y:42
 		{
 			if cursor > 0 {
 				cursor--
 			}
 		}
-	case 7:
+	case 5:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line brainfuck.y:49
+//line brainfuck.y:48
 		{
 			if heap[cursor] < 255 {
 				heap[cursor]++
 			}
 		}
-	case 8:
+	case 6:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line brainfuck.y:55
+//line brainfuck.y:54
 		{
 			if heap[cursor] > 0 {
 				heap[cursor]--
 			}
 		}
-	case 9:
+	case 7:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line brainfuck.y:61
+//line brainfuck.y:60
 		{
 			print(heap[cursor])
 		}
