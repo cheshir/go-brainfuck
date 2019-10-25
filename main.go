@@ -32,6 +32,7 @@ type yySymType struct {
 }
 
 const SPACE = 57346
+const COMMENT = 57347
 
 var yyToknames = [...]string{
 	"$end",
@@ -43,6 +44,7 @@ var yyToknames = [...]string{
 	"'-'",
 	"'.'",
 	"SPACE",
+	"COMMENT",
 }
 var yyStatenames = [...]string{}
 
@@ -50,7 +52,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line brainfuck.y:68
+//line brainfuck.y:67
 
 func main() {
 	if sourceFile == "" {
@@ -70,15 +72,28 @@ type yyLex struct {
 	cursor int
 }
 
+var isComment bool
+
 func (l *yyLex) Lex(lval *yySymType) int {
 	if l.cursor == len(l.source) {
 		return 0
 	}
 
-	c := l.source[l.cursor]
+	c := rune(l.source[l.cursor])
 	l.cursor++
 
-	if unicode.IsSpace(rune(c)) {
+	switch c {
+	case '#':
+		isComment = true
+	case '\n':
+		isComment = false
+	}
+
+	if isComment {
+		return COMMENT
+	}
+
+	if unicode.IsSpace(c) {
 		return SPACE
 	}
 
@@ -98,38 +113,35 @@ var yyExca = [...]int{
 
 const yyPrivate = 57344
 
-const yyLast = 10
+const yyLast = 9
 
 var yyAct = [...]int{
 
-	4, 5, 6, 7, 8, 2, 9, 3, 1, 10,
+	5, 6, 7, 8, 9, 4, 3, 2, 1,
 }
 var yyPact = [...]int{
 
-	-1000, -4, -3, -1000, -1000, -1000, -1000, -1000, -1000, -1000,
-	-3,
+	-1000, -4, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000,
 }
 var yyPgo = [...]int{
 
-	0, 8, 5, 7,
+	0, 8, 7,
 }
 var yyR1 = [...]int{
 
-	0, 1, 1, 3, 3, 3, 3, 3, 2, 2,
+	0, 1, 1, 1, 1, 2, 2, 2, 2, 2,
 }
 var yyR2 = [...]int{
 
-	0, 1, 3, 1, 1, 1, 1, 1, 0, 2,
+	0, 0, 2, 2, 2, 1, 1, 1, 1, 1,
 }
 var yyChk = [...]int{
 
-	-1000, -1, -2, -3, 4, 5, 6, 7, 8, 9,
-	-2,
+	-1000, -1, -2, 10, 9, 4, 5, 6, 7, 8,
 }
 var yyDef = [...]int{
 
-	8, -2, 1, 8, 3, 4, 5, 6, 7, 9,
-	2,
+	1, -2, 2, 3, 4, 5, 6, 7, 8, 9,
 }
 var yyTok1 = [...]int{
 
@@ -143,7 +155,7 @@ var yyTok1 = [...]int{
 }
 var yyTok2 = [...]int{
 
-	2, 3, 9,
+	2, 3, 9, 10,
 }
 var yyTok3 = [...]int{
 	0,
@@ -486,41 +498,41 @@ yydefault:
 	// dummy call; replaced with literal code
 	switch yynt {
 
-	case 3:
+	case 5:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line brainfuck.y:36
+//line brainfuck.y:39
 		{
 			if cursor < heapSize-1 {
 				cursor++
 			}
 		}
-	case 4:
+	case 6:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line brainfuck.y:42
+//line brainfuck.y:45
 		{
 			if cursor > 0 {
 				cursor--
 			}
 		}
-	case 5:
+	case 7:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line brainfuck.y:48
+//line brainfuck.y:51
 		{
 			if heap[cursor] < 255 {
 				heap[cursor]++
 			}
 		}
-	case 6:
+	case 8:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line brainfuck.y:54
+//line brainfuck.y:57
 		{
 			if heap[cursor] > 0 {
 				heap[cursor]--
 			}
 		}
-	case 7:
+	case 9:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line brainfuck.y:60
+//line brainfuck.y:63
 		{
 			print(heap[cursor])
 		}

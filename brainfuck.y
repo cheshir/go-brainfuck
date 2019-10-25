@@ -24,13 +24,14 @@ func init() {
 
 %union{}
 
-%token '>' '<' '+' '-' '.' SPACE
+%token '>' '<' '+' '-' '.' SPACE COMMENT
 
 %%
 
-line	: space
-	| line expr space
-	;
+line	: /* empty */
+	| line expr
+	| line COMMENT
+	| line SPACE;
 
 expr	:    '>'
 		{
@@ -61,10 +62,6 @@ expr	:    '>'
 			print(heap[cursor]);
 		}
 	;
-
-space	:    /* empty */
-	|    space SPACE
-	;
 %%
 
 func main() {
@@ -85,16 +82,28 @@ type yyLex struct {
 	cursor int
 }
 
+var isComment bool
 
 func (l *yyLex) Lex(lval *yySymType) int {
 	if l.cursor == len(l.source) {
 		return 0
 	}
 
-	c := l.source[l.cursor]
+	c := rune(l.source[l.cursor])
 	l.cursor++
 
-	if unicode.IsSpace(rune(c)) {
+	switch c {
+	case '#':
+		isComment = true
+	case '\n':
+		isComment = false
+	}
+
+	if isComment {
+		return COMMENT
+	}
+
+	if unicode.IsSpace(c) {
 		return SPACE
 	}
 

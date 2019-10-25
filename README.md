@@ -22,7 +22,6 @@ Execute:
 
 ## TODO
 
-* Comments
 * ASCII instead of raw bytes output.
 * Loops
 * Compiler (right now utility works as an interpreter)
