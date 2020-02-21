@@ -1,27 +1,47 @@
-# Yet Another Brainfuck Compiler
+# Yet Another Brainfuck Compiler (Transpiler)
 
-Brainfuck compiler based on the YACC.
+## About
 
-## Motivation
+There is two modes: transpiler from brainfuck source code to go and interpreter.
 
-Just to try YACC tool.
+Implemented in raw go without yacc, lex and other stuff.
+
+## Why?
+
+For fun.
 
 ## Usage
 
-Install:
+First of all:
 
 `go get -u github.com/cheshir/go-brainfuck`
 
-Prepare input (brainfuck source code):
+### Brainfuck to go code  
 
-`echo "++.>.<.>." > input.bf`
+Transpile bf file to go:
 
-Execute:
+`go-brainfuck -f /path/to/source.bf -o ./compiled/compiled.go`
 
-`go-brainfuck -s input.bf`
+Or transpile a little piece of bf code:
 
-## TODO
+`go-brainfuck -s "+>++>+++" -o ./compiled/compiled.go`
 
-* ASCII instead of raw bytes output.
-* Loops
-* Compiler (right now utility works as an interpreter)
+Then compile go file:
+
+`go build ./compiled -o compiled-bf`
+
+Run your bf program:
+
+`./compiled-bf`
+
+### Brainfuck interpreter
+
+Also, you can simply run your brainfuck program without compiling.
+
+From file:
+
+`go-brainfuck -f /path/to/source.bf`
+
+Without file:
+
+`go-brainfuck -s "+>++>+++"`
