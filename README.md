@@ -2,7 +2,7 @@
 
 ## About
 
-There is two modes: transpiler from brainfuck source code to go and interpreter.
+There are two modes: transpiler from brainfuck source code to go and interpreter.
 
 Implemented in raw go without yacc, lex and other stuff.
 
